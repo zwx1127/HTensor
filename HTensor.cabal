@@ -10,11 +10,46 @@ build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
-executable demo
-  hs-source-dirs:      src
-  main-is:             Demo.hs
-  default-language:    Haskell2010
-  other-modules: 
-    Tensor, 
-    Linear
-  build-depends:       base >= 4.7 && < 5
+-- executable demo
+--   hs-source-dirs:      src
+--   main-is:             Demo.hs
+--   default-language:    Haskell2010
+--   other-modules: 
+--     Tensor, 
+--     Linear,
+--     Neural
+--   build-depends:       base >= 4.7 && < 5
+
+
+library
+  hs-source-dirs:
+      src
+  -- ghc-options: -Wall
+  build-depends:
+      base ==4.*,
+      hspec ==2.*
+  exposed-modules:
+      Tensor,
+      Linear,
+      Neural
+  other-modules:
+      Paths_HTensor
+  default-language: Haskell2010
+
+test-suite HTensor-test
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs:
+      test
+  -- ghc-options: -Wall
+  build-depends:
+      base ==4.*
+    , hspec ==2.*
+    , HTensor
+  other-modules:
+      Main
+      TestLR,
+      TestBP,
+      Paths_HTensor
+  default-language: Haskell2010
+  build-tool-depends: hspec-discover:hspec-discover == 2.*

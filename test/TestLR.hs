@@ -5,6 +5,12 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
+module TestLR
+    ( testLR
+    )
+where
+
+import           Test.Hspec
 import           Tensor
 import           Linear
 import           Data.Proxy                     ( Proxy(..) )
@@ -112,7 +118,7 @@ positive = [0.697, 0.460, 1]
 
 negative = [0.360, 0.370, 1]
 
-main = do
+testLR = do
     let x' = (fromArray x) :: Matrix 15 3 Double
     let r  = trainNewton 5000 (fromArray wb) x' (fromArray y)
     let pr = predict r (fromArray positive)
@@ -120,5 +126,4 @@ main = do
     print r
     print pr
     print nr
-
 
