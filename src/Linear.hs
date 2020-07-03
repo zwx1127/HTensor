@@ -5,7 +5,6 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-
 module Linear where
 
 import           Tensor
@@ -108,15 +107,23 @@ diagonal (Tensor xs) = fromArray
   index :: Int -> Int -> [Int]
   index n c | n == 1    = [0]
             | otherwise = ((c + 1) * (n - 1)) : (index (n - 1) c)
-
 (.*|) :: (HasDim d, Num a) => a -> Tensor d a -> Tensor d a
-(.*|) s (Tensor xs) = fromArray (fmap ((*) s) xs)
+(.*|) = scalarMul
+
+scalarMul :: (HasDim d, Num a) => a -> Tensor d a -> Tensor d a
+scalarMul s (Tensor xs) = fromArray (fmap ((*) s) xs)
 
 (|*.) :: (HasDim d, Num a) => Tensor d a -> a -> Tensor d a
-(|*.) (Tensor xs) s = fromArray (fmap ((*) s) xs)
+(|*.) = mulScalar
+
+mulScalar :: (HasDim d, Num a) => Tensor d a -> a -> Tensor d a
+mulScalar (Tensor xs) s = fromArray (fmap ((*) s) xs)
 
 (|+|) :: (HasDim d, Num a) => Tensor d a -> Tensor d a -> Tensor d a
-(|+|) (Tensor xs1) (Tensor xs2) = fromArray (pt xs1 xs2)
+(|+|) = matplus
+
+matplus :: (HasDim d, Num a) => Tensor d a -> Tensor d a -> Tensor d a
+matplus (Tensor xs1) (Tensor xs2) = fromArray (pt xs1 xs2)
  where
   pt :: (Num a) => [a] -> [a] -> [a]
   pt []         []         = []
@@ -124,15 +131,21 @@ diagonal (Tensor xs) = fromArray
   pt _          _          = error "index not match shap."
 
 (|-|) :: (HasDim d, Num a) => Tensor d a -> Tensor d a -> Tensor d a
-(|-|) (Tensor xs1) (Tensor xs2) = fromArray (pt xs1 xs2)
+(|-|) = matminus
+
+matminus :: (HasDim d, Num a) => Tensor d a -> Tensor d a -> Tensor d a
+matminus (Tensor xs1) (Tensor xs2) = fromArray (pt xs1 xs2)
  where
   pt :: (Num a) => [a] -> [a] -> [a]
   pt []         []         = []
   pt (x1 : xs1) (x2 : xs2) = (x1 - x2) : (pt xs1 xs2)
   pt _          _          = error "index not match shap."
 
-(|.|) :: (KnownNat m, Num a) => RVector m a -> CVector m a -> a
-(|.|) rv cv = (rv |*| cv) !!! [0, 0]
+(|⋅|) :: (KnownNat m, Num a) => RVector m a -> CVector m a -> a
+(|⋅|) = dot
+
+dot :: (KnownNat m, Num a) => RVector m a -> CVector m a -> a
+dot rv cv = (rv |*| cv) !!! [0, 0]
 
 (|*|)
   :: forall m p n a
@@ -140,7 +153,15 @@ diagonal (Tensor xs) = fromArray
   => Matrix m p a
   -> Matrix p n a
   -> Matrix m n a
-(|*|) (Tensor xs1) (Tensor xs2) = fromArray
+(|*|) = matmul
+
+matmul
+  :: forall m p n a
+   . (KnownNat m, KnownNat p, KnownNat n, Num a)
+  => Matrix m p a
+  -> Matrix p n a
+  -> Matrix m n a
+matmul (Tensor xs1) (Tensor xs2) = fromArray
   (mm (fromInteger (natVal (Proxy @m)))
       (fromInteger (natVal (Proxy @p)))
       xs1
@@ -161,3 +182,22 @@ diagonal (Tensor xs) = fromArray
     | x <- [0 .. m1 - 1]
     , y <- [0 .. n2 - 1]
     ]
+
+(|⊙|)
+  :: (KnownNat m, KnownNat n, Num a)
+  => Matrix m n a
+  -> Matrix m n a
+  -> Matrix m n a
+(|⊙|) = hadamard
+
+hadamard
+  :: (KnownNat m, KnownNat n, Num a)
+  => Matrix m n a
+  -> Matrix m n a
+  -> Matrix m n a
+hadamard (Tensor xs1) (Tensor xs2) = fromArray (p xs1 xs2)
+ where
+  p :: (Num a) => [a] -> [a] -> [a]
+  p (x1 : [] ) (x2 : [] ) = (x1 * x2) : []
+  p (x1 : xs1) (x2 : xs2) = (x1 * x2) : (p xs1 xs2)
+  p _          _          = error "index not match shap."

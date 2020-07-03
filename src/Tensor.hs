@@ -68,5 +68,14 @@ infixr 6 !!!
 fromArray :: forall d a . (HasDim d, Num a) => [a] -> Tensor d a
 fromArray xs = Tensor @d xs
 
+reshape :: (HasDim d1, HasDim d2, Num a) => Tensor d1 a -> Tensor d2 a
+reshape (Tensor xs) = fromArray xs
+
 mapTensor :: (HasDim d, Num a) => (a -> a) -> Tensor d a -> Tensor d a
 mapTensor f (Tensor xs) = fromArray (fmap f xs)
+
+repeatTensor :: forall d a . (HasDim d, Num a) => a -> Tensor d a
+repeatTensor x = fromArray (take (product (dimToArray (Proxy @d))) (repeat x))
+
+zeroTensor :: forall d a . (HasDim d, Num a) => Tensor d a
+zeroTensor = repeatTensor 0
