@@ -11,7 +11,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Tensor where
+module Data.Tensor.Simple.Tensor where
 
 import           Data.Kind                      ( Type )
 import           Data.Proxy                     ( Proxy(..) )

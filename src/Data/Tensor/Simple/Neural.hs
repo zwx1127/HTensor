@@ -10,14 +10,14 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Neural where
+module Data.Tensor.Simple.Neural where
 
 import           Data.Proxy                     ( Proxy(..) )
 import           GHC.TypeLits                   ( KnownNat
                                                 , natVal
                                                 )
-import           Tensor
-import           Linear
+import           Data.Tensor.Simple.Tensor
+import           Data.Tensor.Simple.Linear
 
 data Layer m n a = Layer {
     w :: Matrix n m a,

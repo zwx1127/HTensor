@@ -7,9 +7,9 @@ where
 
 import           GHC.TypeLits                   ( KnownNat )
 import           Test.Hspec
-import           Tensor
-import           Linear
-import           Neural
+import           Data.Tensor.Simple.Tensor
+import           Data.Tensor.Simple.Linear
+import           Data.Tensor.Simple.Neural
 
 sigmoid :: (Floating a) => a -> a
 sigmoid x = 1 / (1 + exp (-x))

@@ -11,8 +11,8 @@ module TestLR
 where
 
 import           Test.Hspec
-import           Tensor
-import           Linear
+import           Data.Tensor.Simple.Tensor
+import           Data.Tensor.Simple.Linear
 import           Data.Proxy                     ( Proxy(..) )
 import           GHC.TypeLits                   ( KnownNat
                                                 , natVal

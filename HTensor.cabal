@@ -29,9 +29,9 @@ library
       base ==4.*,
       hspec ==2.*
   exposed-modules:
-      Tensor,
-      Linear,
-      Neural
+      Data.Tensor.Simple.Tensor,
+      Data.Tensor.Simple.Linear,
+      Data.Tensor.Simple.Neural
   other-modules:
       Paths_HTensor
   default-language: Haskell2010

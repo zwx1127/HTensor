@@ -5,9 +5,9 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Linear where
+module Data.Tensor.Simple.Linear where
 
-import           Tensor
+import           Data.Tensor.Simple.Tensor
 import           Data.Proxy                     ( Proxy(..) )
 import           GHC.TypeLits                   ( KnownNat
                                                 , natVal
