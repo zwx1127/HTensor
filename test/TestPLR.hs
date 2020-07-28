@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-module TestLR (testLR) where
+module TestPLR (testPLR) where
 
 import Data.Tensor.Efficient.Eval
 import Data.Tensor.Efficient.Linear.Base
@@ -223,8 +223,8 @@ trainY = (take 8 (repeat 1.0)) <> (take 9 (repeat 0.0))
 trainWB :: [Double]
 trainWB = [0, 0, 0]
 
-testLR :: IO ()
-testLR = do
+testPLR :: IO ()
+testPLR = do
   let trainX' = (fromList trainX) :: Matrix U 15 3 Double
   r <- train 80000 0.01 (fromList trainWB) trainX' (fromList trainY)
   lossr <- loss r trainX' (fromList trainY)

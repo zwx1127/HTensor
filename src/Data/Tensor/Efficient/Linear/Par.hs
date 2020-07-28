@@ -13,8 +13,8 @@ import Data.Tensor.Efficient.Linear.Base
 import qualified Data.Tensor.Efficient.Linear.Delay as D
 import qualified Data.Tensor.Efficient.Operators.Par as EP
 import Data.Tensor.Efficient.Shape
-import qualified Data.Tensor.Efficient.Source.Unbox as UT
 import Data.Tensor.Efficient.Source
+import qualified Data.Tensor.Efficient.Source.Unbox as UT
 import qualified Data.Vector.Unboxed as U
 import GHC.TypeLits (KnownNat)
 
@@ -265,5 +265,6 @@ dot ::
   CVector r2 m e ->
   mo e
 dot arr1 arr2 = do
-  arr <- arr1 |*| arr2 :: mo (Matrix UT.U 1 1 e)
-  return $ arr !? (0 :. 0 :. Z)
+  let r = D.row arr1 1
+  let c = D.column arr2 1
+  EP.sumAll $ r D.|⊙| c

@@ -238,4 +238,4 @@ dot ::
   RVector r1 m e ->
   CVector r2 m e ->
   e
-dot arr1 arr2 = (arr1 |*| arr2 :: (Matrix UT.U 1 1 e)) !? (0 :. 0 :. Z)
+dot arr1 arr2 = ES.sumAll $ (row arr1 1) |⊙| (column arr2 1)
