@@ -6,11 +6,11 @@ module Data.Tensor.Efficient.Operators.Par where
 
 import Data.Tensor.Efficient.Eval
 import qualified Data.Tensor.Efficient.Eval.Reduce as R
-import Data.Tensor.Efficient.Eval.Target
 import qualified Data.Tensor.Efficient.Operators.Delay as D
 import Data.Tensor.Efficient.Shape
 import Data.Tensor.Efficient.Source
 import qualified Data.Vector.Unboxed as U
+import qualified Data.Tensor.Efficient.Source.Unbox as UT
 import System.IO.Unsafe
 
 {-# INLINE [1] foldAll #-}
@@ -26,14 +26,13 @@ sumAll = foldAll (+) 0
 
 {-# INLINE [1] mapTensor #-}
 mapTensor ::
-  forall (r1 :: *) (r2 :: *) sh a (m :: * -> *).
+  forall (r1 :: *) sh a (m :: * -> *).
   ( Source r1 a,
-    Source r2 a,
-    Target r2 a,
     Shape sh,
-    Monad m
+    Monad m,
+    U.Unbox a
   ) =>
   (a -> a) ->
   Tensor r1 sh a ->
-  m (Tensor r2 sh a)
+  m (Tensor UT.U sh a)
 mapTensor f arr = computeP (D.mapTensor f arr)

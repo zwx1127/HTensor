@@ -7,12 +7,9 @@
 
 module TestPLR (testPLR) where
 
-import Data.Tensor.Efficient.Eval
 import Data.Tensor.Efficient.Linear.Base
-import Data.Tensor.Efficient.Linear.Par ((|⋅|))
-import Data.Tensor.Efficient.Linear.Delay
-import Data.Tensor.Efficient.Operators.Delay
-import Data.Tensor.Efficient.Source.Delay
+import Data.Tensor.Efficient.Linear.Par
+import Data.Tensor.Efficient.Operators.Par
 import Data.Tensor.Efficient.Source
 import Data.Tensor.Efficient.Source.Unbox
 import qualified Data.Vector.Unboxed as U
@@ -33,7 +30,8 @@ predict ::
   Matrix r2 n m e ->
   IO (Matrix U n 1 e)
 predict wb x' = do
-  computeP $ mapTensor sigmoid (x' |*| (cv wb))
+  z <- (x' |*| (cv wb))
+  mapTensor sigmoid z
 
 sigmoid :: Floating a => a -> a
 sigmoid x = 1 / (1 + exp (- x))
@@ -52,26 +50,37 @@ loss ::
   Matrix r2 n m e ->
   Vector U n e ->
   mo e
-loss wb x' y =
-  let z = x' |*| (cv wb)
-      repeat1 = (repeatTensor 1) :: RVector D n e
-   in repeat1 |⋅| (((cv y) |⊙| z) |+| (mapTensor (\z' -> log ((exp z')) + 1) z))
+loss wb x' y = do
+  let repeat1 = (repeatTensor 1) :: RVector U n e
+  z <- x' |*| (cv wb)
+  mapZ <- mapTensor (\z' -> log ((exp z')) + 1) z
+  yz <- (cv y) |⊙| z
+  r <- yz |+| mapZ
+  repeat1 |⋅| r
 
 -- Gradient Descent
 gradient ::
-  forall r1 r2 r3 e m n.
+  forall r1 r2 r3 e m n mo.
   ( Source r1 e,
     Source r2 e,
     Source r3 e,
     KnownNat m,
     KnownNat n,
-    Floating e
+    U.Unbox e,
+    Floating e,
+    Monad mo
   ) =>
   Vector r1 m e ->
   Matrix r2 n m e ->
   Vector r3 n e ->
-  Vector D m e
-gradient wb x' y = reshape $ (transpose x') |*| ((cv y) |-| (mapTensor p (x' |*| (cv wb))))
+  mo (Vector U m e)
+gradient wb x' y = do
+  z <- (x' |*| (cv wb))
+  mapZ <- (mapTensor p z)
+  y' <- (cv y) |-| mapZ
+  trX' <- transpose x'
+  r <- trX' |*| y'
+  return $ reshape r
   where
     p :: (Floating a) => a -> a
     p x = 1 / (1 + (exp (- x)))
@@ -93,8 +102,9 @@ gd ::
   Vector r3 n e ->
   mo (Vector U m e)
 gd rate wb x' y = do
-  let d = wb |+| (rate .*| (gradient wb x' y))
-  computeP d
+  gd' <- gradient wb x' y
+  step <- rate .*| gd'
+  wb |+| step
 
 train ::
   forall r m n e mo.

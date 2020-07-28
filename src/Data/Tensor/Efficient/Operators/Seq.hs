@@ -5,10 +5,11 @@ module Data.Tensor.Efficient.Operators.Seq where
 
 import Data.Tensor.Efficient.Eval
 import qualified Data.Tensor.Efficient.Eval.Reduce as R
-import Data.Tensor.Efficient.Eval.Target
 import qualified Data.Tensor.Efficient.Operators.Delay as D
 import Data.Tensor.Efficient.Shape
+import qualified Data.Tensor.Efficient.Source.Unbox as UT
 import Data.Tensor.Efficient.Source
+import qualified Data.Vector.Unboxed as U
 import GHC.Exts
 
 {-# INLINE [1] foldAll #-}
@@ -25,11 +26,10 @@ sumAll = foldAll (+) 0
 {-# INLINE [1] mapTensor #-}
 mapTensor ::
   ( Source r1 a,
-    Source r2 a,
-    Target r2 a,
-    Shape sh
+    Shape sh,
+    U.Unbox a
   ) =>
   (a -> a) ->
   Tensor r1 sh a ->
-  Tensor r2 sh a
+  Tensor UT.U sh a
 mapTensor f arr = computeS (D.mapTensor f arr)
