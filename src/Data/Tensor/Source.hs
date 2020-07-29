@@ -12,10 +12,10 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Data.Tensor.Efficient.Source where
+module Data.Tensor.Source where
 
 import Data.Proxy (Proxy (..))
-import Data.Tensor.Efficient.Shape
+import Data.Tensor.Shape
 
 class Source r e where
   data Tensor r sh e
@@ -64,3 +64,6 @@ repeatTensor e = generate (\_ -> e)
 
 zeroTensor :: (Source r e, Num e, Shape sh) => Tensor r sh e
 zeroTensor = repeatTensor 0
+
+oneTensor :: (Source r e, Num e, Shape sh) => Tensor r sh e
+oneTensor = repeatTensor 1

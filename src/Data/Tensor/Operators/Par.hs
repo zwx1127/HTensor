@@ -2,15 +2,15 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE RankNTypes #-}
 
-module Data.Tensor.Efficient.Operators.Par where
+module Data.Tensor.Operators.Par where
 
-import Data.Tensor.Efficient.Eval
-import qualified Data.Tensor.Efficient.Eval.Reduce as R
-import qualified Data.Tensor.Efficient.Operators.Delay as D
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Eval
+import qualified Data.Tensor.Eval.Reduce as R
+import qualified Data.Tensor.Operators.Delay as D
+import Data.Tensor.Shape
+import Data.Tensor.Source
 import qualified Data.Vector.Unboxed as U
-import qualified Data.Tensor.Efficient.Source.Unbox as UT
+import qualified Data.Tensor.Source.Unbox as UT
 import System.IO.Unsafe
 
 {-# INLINE [1] foldAll #-}

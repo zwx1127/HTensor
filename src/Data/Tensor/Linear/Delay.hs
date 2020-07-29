@@ -6,14 +6,14 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Data.Tensor.Efficient.Linear.Delay where
+module Data.Tensor.Linear.Delay where
 
-import Data.Tensor.Efficient.Linear.Base
-import qualified Data.Tensor.Efficient.Operators.Delay as D
-import qualified Data.Tensor.Efficient.Operators.Seq as S
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
-import Data.Tensor.Efficient.Source.Delay
+import Data.Tensor.Linear.Base
+import qualified Data.Tensor.Operators.Delay as D
+import qualified Data.Tensor.Operators.Seq as S
+import Data.Tensor.Shape
+import Data.Tensor.Source
+import Data.Tensor.Source.Delay
 import GHC.TypeLits (KnownNat)
 
 row ::

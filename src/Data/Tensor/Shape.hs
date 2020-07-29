@@ -12,7 +12,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Data.Tensor.Efficient.Shape where
+module Data.Tensor.Shape where
 
 import Data.Kind (Type)
 import Data.Proxy (Proxy (..))

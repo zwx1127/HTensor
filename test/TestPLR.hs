@@ -7,11 +7,11 @@
 
 module TestPLR (testPLR) where
 
-import Data.Tensor.Efficient.Linear.Base
-import Data.Tensor.Efficient.Linear.Par
-import Data.Tensor.Efficient.Operators.Par
-import Data.Tensor.Efficient.Source
-import Data.Tensor.Efficient.Source.Unbox
+import Data.Tensor.Linear.Base
+import Data.Tensor.Linear.Par
+import Data.Tensor.Operators.Par
+import Data.Tensor.Source
+import Data.Tensor.Source.Unbox
 import qualified Data.Vector.Unboxed as U
 import GHC.TypeLits
   ( KnownNat,

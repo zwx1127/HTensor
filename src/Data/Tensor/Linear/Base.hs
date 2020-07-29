@@ -6,10 +6,10 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Data.Tensor.Efficient.Linear.Base where
+module Data.Tensor.Linear.Base where
 
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Shape
+import Data.Tensor.Source
 import GHC.TypeLits (KnownNat)
 
 -- type Scalar r e = Tensor r Z e

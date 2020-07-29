@@ -1,4 +1,4 @@
-module Data.Tensor.Efficient.Eval.Gang where
+module Data.Tensor.Eval.Gang where
 
 import Control.Concurrent.MVar
 import Control.Monad

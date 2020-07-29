@@ -7,14 +7,14 @@
 
 module TestLR (testLR) where
 
-import Data.Tensor.Efficient.Eval
-import Data.Tensor.Efficient.Linear.Base
-import Data.Tensor.Efficient.Linear.Par ((|⋅|))
-import Data.Tensor.Efficient.Linear.Delay
-import Data.Tensor.Efficient.Operators.Delay
-import Data.Tensor.Efficient.Source.Delay
-import Data.Tensor.Efficient.Source
-import Data.Tensor.Efficient.Source.Unbox
+import Data.Tensor.Eval
+import Data.Tensor.Linear.Base
+import Data.Tensor.Linear.Par ((|⋅|))
+import Data.Tensor.Linear.Delay
+import Data.Tensor.Operators.Delay
+import Data.Tensor.Source.Delay
+import Data.Tensor.Source
+import Data.Tensor.Source.Unbox
 import qualified Data.Vector.Unboxed as U
 import GHC.TypeLits
   ( KnownNat,

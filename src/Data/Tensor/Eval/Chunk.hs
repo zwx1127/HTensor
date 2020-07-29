@@ -1,9 +1,9 @@
 {-# LANGUAGE MagicHash #-}
 {-# LANGUAGE BangPatterns #-}
 
-module Data.Tensor.Efficient.Eval.Chunk where
+module Data.Tensor.Eval.Chunk where
 
-import Data.Tensor.Efficient.Eval.Gang
+import Data.Tensor.Eval.Gang
 import GHC.Exts
 
 fillLinearS :: Int -> (Int -> a -> IO ()) -> (Int -> a) -> IO ()

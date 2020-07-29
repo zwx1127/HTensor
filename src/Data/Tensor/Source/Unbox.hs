@@ -9,13 +9,13 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Tensor.Efficient.Source.Unbox where
+module Data.Tensor.Source.Unbox where
 
 import Control.Monad
 import Data.Proxy (Proxy (..))
-import Data.Tensor.Efficient.Eval.Target
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Eval.Target
+import Data.Tensor.Shape
+import Data.Tensor.Source
 import qualified Data.Vector.Unboxed as U
 import qualified Data.Vector.Unboxed.Mutable as UM
 
@@ -69,3 +69,9 @@ instance (U.Unbox e) => Target U e where
 
   {-# INLINE seqMVec #-}
   seqMVec vec x = vec `seq` x
+
+zeroUTensor :: (U.Unbox e, Num e, Shape sh) => Tensor U sh e
+zeroUTensor = repeatTensor 0
+
+oneUTensor :: (U.Unbox e, Num e, Shape sh) => Tensor U sh e
+oneUTensor = repeatTensor 1

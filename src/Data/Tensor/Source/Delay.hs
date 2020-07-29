@@ -7,14 +7,14 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Tensor.Efficient.Source.Delay where
+module Data.Tensor.Source.Delay where
 
 import Data.Proxy (Proxy (..))
-import Data.Tensor.Efficient.Eval.Chunk
-import Data.Tensor.Efficient.Eval.Load
-import Data.Tensor.Efficient.Eval.Target
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Eval.Chunk
+import Data.Tensor.Eval.Load
+import Data.Tensor.Eval.Target
+import Data.Tensor.Shape
+import Data.Tensor.Source
 
 data D
 
@@ -67,3 +67,9 @@ instance forall sh e. (Shape sh) => Load D sh e where
 
 delay :: forall r sh e. (Shape sh, Source r e) => Tensor r sh e -> Tensor D sh e
 delay arr = TDelay @sh (unsafeIndex arr)
+
+zeroDTensor :: (Num e, Shape sh) => Tensor D sh e
+zeroDTensor = repeatTensor 0
+
+oneDTensor :: (Num e, Shape sh) => Tensor D sh e
+oneDTensor = repeatTensor 1

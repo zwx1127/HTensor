@@ -6,15 +6,15 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Data.Tensor.Efficient.Linear.Par where
+module Data.Tensor.Linear.Par where
 
-import Data.Tensor.Efficient.Eval
-import Data.Tensor.Efficient.Linear.Base
-import qualified Data.Tensor.Efficient.Linear.Delay as D
-import qualified Data.Tensor.Efficient.Operators.Seq as ES
-import Data.Tensor.Efficient.Shape
-import qualified Data.Tensor.Efficient.Source.Unbox as UT
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Eval
+import Data.Tensor.Linear.Base
+import qualified Data.Tensor.Linear.Delay as D
+import qualified Data.Tensor.Operators.Seq as ES
+import Data.Tensor.Shape
+import qualified Data.Tensor.Source.Unbox as UT
+import Data.Tensor.Source
 import qualified Data.Vector.Unboxed as U
 import GHC.TypeLits (KnownNat)
 

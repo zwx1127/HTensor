@@ -1,13 +1,13 @@
 {-# LANGUAGE MonoLocalBinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module Data.Tensor.Efficient.Eval where
+module Data.Tensor.Eval where
 
-import Data.Tensor.Efficient.Eval.Load
-import Data.Tensor.Efficient.Eval.Target
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
-import Data.Tensor.Efficient.Source.Delay
+import Data.Tensor.Eval.Load
+import Data.Tensor.Eval.Target
+import Data.Tensor.Shape
+import Data.Tensor.Source
+import Data.Tensor.Source.Delay
 import System.IO.Unsafe
 
 {-# INLINE [4] now #-}

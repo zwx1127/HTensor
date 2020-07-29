@@ -1,14 +1,14 @@
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE MagicHash #-}
 
-module Data.Tensor.Efficient.Operators.Seq where
+module Data.Tensor.Operators.Seq where
 
-import Data.Tensor.Efficient.Eval
-import qualified Data.Tensor.Efficient.Eval.Reduce as R
-import qualified Data.Tensor.Efficient.Operators.Delay as D
-import Data.Tensor.Efficient.Shape
-import qualified Data.Tensor.Efficient.Source.Unbox as UT
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Eval
+import qualified Data.Tensor.Eval.Reduce as R
+import qualified Data.Tensor.Operators.Delay as D
+import Data.Tensor.Shape
+import qualified Data.Tensor.Source.Unbox as UT
+import Data.Tensor.Source
 import qualified Data.Vector.Unboxed as U
 import GHC.Exts
 

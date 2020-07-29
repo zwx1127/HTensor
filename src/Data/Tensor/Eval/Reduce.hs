@@ -2,9 +2,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE MagicHash #-}
 
-module Data.Tensor.Efficient.Eval.Reduce where
+module Data.Tensor.Eval.Reduce where
 
-import Data.Tensor.Efficient.Eval.Gang
+import Data.Tensor.Eval.Gang
 import qualified Data.Vector.Unboxed as V
 import qualified Data.Vector.Unboxed.Mutable as M
 import GHC.Base (divInt, quotInt)

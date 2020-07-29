@@ -9,13 +9,13 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Tensor.Efficient.Source.Vector where
+module Data.Tensor.Source.Vector where
 
 import Control.Monad
 import Data.Proxy (Proxy (..))
-import Data.Tensor.Efficient.Eval.Target
-import Data.Tensor.Efficient.Shape
-import Data.Tensor.Efficient.Source
+import Data.Tensor.Eval.Target
+import Data.Tensor.Shape
+import Data.Tensor.Source
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as VM
 
@@ -69,3 +69,9 @@ instance Target V e where
 
   {-# INLINE seqMVec #-}
   seqMVec vec x = vec `seq` x
+
+zeroVTensor :: (Num e, Shape sh) => Tensor V sh e
+zeroVTensor = repeatTensor 0
+
+oneVTensor :: (Num e, Shape sh) => Tensor V sh e
+oneVTensor = repeatTensor 1

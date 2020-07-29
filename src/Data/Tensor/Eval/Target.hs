@@ -1,10 +1,10 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Data.Tensor.Efficient.Eval.Target where
+module Data.Tensor.Eval.Target where
 
-import           Data.Tensor.Efficient.Source
-import           Data.Tensor.Efficient.Shape
+import           Data.Tensor.Source
+import           Data.Tensor.Shape
 
 class Target r e where
 

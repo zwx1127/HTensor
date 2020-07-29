@@ -1,10 +1,10 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Data.Tensor.Efficient.Eval.Load where
+module Data.Tensor.Eval.Load where
 
-import           Data.Tensor.Efficient.Source
-import           Data.Tensor.Efficient.Shape
-import           Data.Tensor.Efficient.Eval.Target
+import           Data.Tensor.Source
+import           Data.Tensor.Shape
+import           Data.Tensor.Eval.Target
 
 class (Source r1 e, Shape sh) => Load r1 sh e where
 
