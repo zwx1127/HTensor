@@ -17,7 +17,7 @@ t1 :: Tensor U (3 >< 4 >< Z) Int
 t1 = generate (\(x :. y :. Z) -> x + y)
 ```
 ## Linear
-Every operator has Seq (sequence), Par (parallel) Delay (delayed tensor structure) three versions, except the reduce operator such as the fold, dot product.
+Every operator has Seq (sequence), Par (parallel) and Delay (delayed tensor structure) three versions, except the reduce operator such as the fold, dot product.
 ``` haskell
 -- create matrix
 m :: Matrix U 3 4 Int
