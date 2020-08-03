@@ -26,7 +26,6 @@ sumAll = foldAll (+) 0
 
 {-# INLINE [1] mapTensor #-}
 mapTensor ::
-  forall (r1 :: *) sh a (m :: * -> *).
   ( Source r1 a,
     Shape sh,
     Monad m,

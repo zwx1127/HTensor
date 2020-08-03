@@ -16,20 +16,16 @@ sigmoid x = 1 / (1 + exp (- x))
 sigmoid' :: (Floating a) => a -> a
 sigmoid' x = (sigmoid x) * (1 - (sigmoid x))
 
-l0 :: Layer U 2 3 Float
+l0 :: Layer U 2 10 Float
 l0 =
   Layer {w = repeatTensor 1, b = repeatTensor 1, f = sigmoid, f' = sigmoid'}
 
-l1 :: Layer U 3 3 Float
+l1 :: Layer U 10 1 Float
 l1 =
   Layer {w = repeatTensor 1, b = repeatTensor 1, f = sigmoid, f' = sigmoid'}
 
-l2 :: Layer U 3 1 Float
-l2 =
-  Layer {w = repeatTensor 1, b = repeatTensor 1, f = sigmoid, f' = sigmoid'}
-
 model :: Neural U 2 1 Float
-model = Neural l0 :~: Neural l1 :~: Neural l2
+model = Neural l0 :~: Neural l1
 
 trainX :: [Float]
 trainX =
@@ -76,6 +72,6 @@ testBP :: IO ()
 testBP = do
   let x' = (fromList trainX) :: Matrix U 17 2 Float
   let y' = (fromList trainY) :: Matrix U 17 1 Float
-  r <- trainLoop 100000 0.1 x' y' model
+  r <- trainLoop 500000 0.1 x' y' model
   pr <- predict x' r
   print pr
