@@ -33,7 +33,7 @@ main = do
   r <- m |*| m' :: IO (Matrix U 3 3 Int)
   print t
 
--- Delayed matmul
+-- Delay matmul
 r :: Matrix D 3 3 Int
 r = m |*| m'
 ```
