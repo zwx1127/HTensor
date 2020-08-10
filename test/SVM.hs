@@ -23,6 +23,7 @@ import Data.Tensor.Source.Unbox
 import qualified Data.Vector.Unboxed as U
 import GHC.TypeLits (KnownNat, natVal)
 import System.Random
+import Control.Monad.Trans
 import Control.Monad.Trans.State
 
 repeatB :: (Shape sh, U.Unbox a, Floating a) => a -> Tensor D sh a
@@ -126,21 +127,20 @@ data SMOST r m a where
   SMOST ::
     (Source r a, KnownNat m) =>
     { a :: Vector r m a,
-      b :: a,
-      i :: Int,
-      j :: Int
+      b :: a
     } ->
     SMOST r m a
 
 smo ::
-  forall r1 r2 a m n .
+  forall r1 r2 a m n mo.
   ( Source r1 a,
     Source r2 a,
     KnownNat m,
     KnownNat n,
     Ord a,
     U.Unbox a,
-    Floating a
+    Floating a,
+    MonadIO mo
   ) =>
   Int ->
   Matrix r1 m n a ->
@@ -153,15 +153,15 @@ smo ::
     )
   ) ->
   a ->
-  IO (SMOST U m a)
+  mo (SMOST U m a)
 smo n trainX trainY k c = do
   let a' = repeatTensor 0 :: Vector U m a
-  let st = SMOST {a=a', b=0, i=0, j=2}
+  let st = SMOST {a=a', b=0}
   kMat <- computeK
   smost <- evalStateT (step n trainX trainY k kMat c) st
   return smost
   where
-    computeK :: IO (Matrix U m m a)
+    computeK :: mo (Matrix U m m a)
     computeK = do
       let kMatD = generate (\(ixi :. ixj :. Z) -> k (row trainX ixi) (row trainX ixj)) :: Matrix D m m a
       computeP kMatD
@@ -175,7 +175,7 @@ step :: forall r1 r2 r5 m n a mo.
     Ord a, 
     U.Unbox a, 
     Floating a,
-    Monad mo
+    MonadIO mo
   ) => 
   Int -> 
   Matrix r1 m n a -> 
@@ -192,8 +192,8 @@ step n trainX trainY k kMat c
     st <- get
     return st 
   | otherwise = do 
-    SMOST{a=a', b=b', i=i', j=j'} <- get 
-    let g = mkStdGen (2 * i' + 3 * j')
+    SMOST{a=a', b=b'} <- get 
+    g <- liftIO $ newStdGen
     let (iN, jN) = randCouple 0 (mLength - 1) g
     pi' <- svm' (row trainX iN) trainX trainY k a' b'
     pj' <- svm' (row trainX jN) trainX trainY k a' b'
@@ -201,7 +201,7 @@ step n trainX trainY k kMat c
     let ej = pj' - (trainY !? (jN :. Z))
     aN <- updateA iN jN trainY ei ej kMat a' c
     bN <- updateB iN jN trainY ei ej kMat aN a' b'
-    put SMOST{a=aN, b=bN, i=iN, j=jN}
+    put SMOST{a=aN, b=bN}
     step (n - 1) trainX trainY k kMat c
     where
       mLength :: Int
@@ -238,18 +238,25 @@ updateA i' j' trainY ei ej k a' c = do
   let kii = k !? (i' :. i' :. Z)
   let kjj = k !? (j' :. j' :. Z)
   let kij = k !? (i' :. j' :. Z)
-  let ajNU = aj + (yj * (ei - ej)) / (kii + kjj - 2 * kij)
-  let l = max 0 (aj - ai)
-  let h = min c (c + aj - ai)
-  let ajN = clip l h ajNU
-  let aiN = ai + yi * yj * (aj - ajN)
-  computeP (( generate ( \case (ixi :. Z) | ixi == i' -> aiN | ixi == j' -> ajN | otherwise -> a' !? (ixi :. Z))) :: Vector D m a)
+  let eta = kii + kjj - 2 * kij
+  if eta  <= 0
+    then do 
+      computeP $ delay a'
+  else do
+    let ajNU = aj + (yj * (ei - ej)) / eta
+    let l | yi /= yj = max 0 (aj - ai)
+          | otherwise = max 0 (ai + aj - c)
+    let h | yi /= yj = min c (c + aj - ai)
+          | otherwise = min c (ai + aj)
+    let ajN = clip l h ajNU
+    let aiN = ai + yi * yj * (aj - ajN)
+    computeP (( generate ( \case (ixi :. Z) | ixi == i' -> aiN | ixi == j' -> ajN | otherwise -> a' !? (ixi :. Z))) :: Vector D m a)
   where
     clip :: (Ord a) => a -> a -> a -> a
     clip l h aU
       | aU > h = h
-      | aU >= l && aU <= h = aU
-      | otherwise = l
+      | aU < l = l
+      | otherwise = aU
 
 updateB ::
   ( Source r1 a,
@@ -270,18 +277,19 @@ updateB ::
   Vector r4 m a ->
   a ->
   mo a
-updateB i' j' trainY _ ej k aN aO b' = do
+updateB i' j' trainY ei ej k aN aO b' = do
   let yi = trainY !? (i' :. Z)
   let yj = trainY !? (j' :. Z)
-  sumP <- P.sumAll $ aN |⊙| trainY |⊙| (column k 1)
-  let biN = yi - sumP
+  let kii = k !? (i' :. i' :. Z)
   let kij = k !? (i' :. j' :. Z)
+  let kji = k !? (j' :. i' :. Z)
   let kjj = k !? (j' :. j' :. Z)
   let aiN = aN !? (i' :. Z)
   let ajN = aN !? (j' :. Z)
   let aiO = aO !? (i' :. Z)
   let ajO = aO !? (j' :. Z)
-  let bjN = - ej - yi * kij * (aiN - aiO) - yj * kjj * (ajN - ajO) + b'
+  let biN = -ei - yi * kii * (aiN - aiO) - yj * kji * (ajN - ajO) + b'
+  let bjN = -ej - yi * kij * (aiN - aiO) - yj * kjj * (ajN - ajO) + b'
   return $ (biN + bjN) / 2
 
 trainX' :: Matrix U 17 2 Float
@@ -323,12 +331,14 @@ trainX' = fromList $
   ]
 
 trainY' :: Vector U 17 Float
-trainY' = fromList $ (take 8 (repeat 1.0)) <> (take 9 (repeat 0.0))
+trainY' = fromList $ (take 8 (repeat 1.0)) <> (take 9 (repeat (-1.0)))
 
 testSVM :: IO ()
 testSVM = do
-  SMOST{a=aN, b=bN} <- smo 100000 trainX' trainY' (rbf 300) 1000
+  let alpha = 40
+  let c = 100
+  SMOST{a=aN, b=bN} <- smo 100000 trainX' trainY' (rbf alpha) c
   print aN
   print bN
-  result <- svm trainX' trainX' trainY' (rbf 5) aN bN
+  result <- svm trainX' trainX' trainY' (rbf alpha) aN bN
   print result

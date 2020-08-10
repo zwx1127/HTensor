@@ -20,6 +20,7 @@ library
       , vector >= 0.12 && < 0.13
       , random
       , transformers
+      , mtl
   exposed-modules:
       Data.Tensor.Source,
       Data.Tensor.Shape,
@@ -55,10 +56,10 @@ test-suite HTensor-test
     , vector ==0.12.*
     , random
     , transformers
+    , mtl
     , HTensor
   other-modules:
       TestLR,
-      TestPLR,
       TestBP,
       TestEF,
       Neural,
