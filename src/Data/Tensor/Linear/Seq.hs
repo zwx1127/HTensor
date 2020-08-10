@@ -6,7 +6,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Data.Tensor.Linear.Par where
+module Data.Tensor.Linear.Seq where
 
 import Data.Tensor.Eval
 import Data.Tensor.Linear.Base
@@ -238,4 +238,10 @@ dot ::
   RVector r1 m e ->
   CVector r2 m e ->
   e
-dot arr1 arr2 = ES.sumAll $ (row arr1 1) |⊙| (column arr2 1)
+dot arr1 arr2 = ES.sumAll $ (row arr1 0) |⊙| (column arr2 0)
+
+normSq :: (Source r a, KnownNat n, U.Unbox a, Num a) => Vector r n a -> a
+normSq x = (rv x) |⋅| (cv x)
+
+norm :: (Source r a, KnownNat n, U.Unbox a, Floating a) => Vector r n a -> a
+norm x = sqrt $ normSq x

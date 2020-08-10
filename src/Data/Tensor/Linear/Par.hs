@@ -265,6 +265,14 @@ dot ::
   CVector r2 m e ->
   mo e
 dot arr1 arr2 = do
-  let r = D.row arr1 1
-  let c = D.column arr2 1
+  let r = D.row arr1 0
+  let c = D.column arr2 0
   EP.sumAll $ r D.|⊙| c
+
+normSq :: (Source r a, KnownNat n, U.Unbox a, Num a, Monad mo) => Vector r n a -> mo a
+normSq x = (rv x) |⋅| (cv x)
+
+norm :: (Source r a, KnownNat n, U.Unbox a, Floating a, Monad mo) => Vector r n a -> mo a
+norm x = do
+  result <- normSq x
+  return $ sqrt result

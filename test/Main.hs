@@ -1,23 +1,21 @@
 module Main where
 
+import SVM
 import Test.Hspec
 import TestBP
--- import TestEF
+import TestEF
 import TestLR
-import TestPLR
 
 spec :: Spec
 spec = do
-  -- -- it "test Newton train" $ do
-  -- --   testLR
-  -- it "test P Newton train" $ do
-  --   testPLR
-
-  it "test bp neural network" $ do
+  it "LR" $ do
+    testLR
+  it "BP" $ do
     testBP
-
--- it "test efficitent" $ do
---   testEF
+  it "EF" $ do
+    testEF
+  it "SVM" $ do
+    testSVM
 
 main :: IO ()
 main = hspec spec

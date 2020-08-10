@@ -59,11 +59,14 @@ class Source r e where
 instance (Source r e, Shape sh, Show e) => Show (Tensor r sh e) where
   show = tensorToString
 
+{-# INLINE repeatTensor #-}
 repeatTensor :: (Source r e, Shape sh) => e -> Tensor r sh e
 repeatTensor e = generate (\_ -> e)
 
+{-# INLINE zeroTensor #-}
 zeroTensor :: (Source r e, Num e, Shape sh) => Tensor r sh e
 zeroTensor = repeatTensor 0
 
+{-# INLINE oneTensor #-}
 oneTensor :: (Source r e, Num e, Shape sh) => Tensor r sh e
 oneTensor = repeatTensor 1

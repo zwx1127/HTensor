@@ -61,6 +61,9 @@ instance (U.Unbox e) => Target U e where
   {-# INLINE unsafeWrite #-}
   unsafeWrite (UVector v) ix = UM.unsafeWrite v ix
 
+  {-# INLINE unsafeRead #-}
+  unsafeRead (UVector v) ix = UM.unsafeRead v ix
+
   {-# INLINE unsafeFreeze #-}
   unsafeFreeze :: forall sh. (Shape sh) => MVec U e -> IO (Tensor U sh e)
   unsafeFreeze (UVector mvec) = do

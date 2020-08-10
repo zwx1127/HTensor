@@ -61,6 +61,9 @@ instance Target V e where
   {-# INLINE unsafeWrite #-}
   unsafeWrite (MVector v) ix = VM.unsafeWrite v ix
 
+  {-# INLINE unsafeRead #-}
+  unsafeRead (MVector v) ix = VM.unsafeRead v ix
+
   {-# INLINE unsafeFreeze #-}
   unsafeFreeze :: forall sh. (Shape sh) => MVec V e -> IO (Tensor V sh e)
   unsafeFreeze (MVector mvec) = do
