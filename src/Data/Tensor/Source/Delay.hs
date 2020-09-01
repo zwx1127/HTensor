@@ -65,11 +65,14 @@ instance forall sh e. (Shape sh) => Load D sh e where
       (unsafeWrite mvec)
       (f . fromIndex (Proxy @sh))
 
+{-# INLINE delay #-}
 delay :: forall r sh e. (Shape sh, Source r e) => Tensor r sh e -> Tensor D sh e
 delay arr = TDelay @sh (unsafeIndex arr)
 
+{-# INLINE zeroDTensor #-}
 zeroDTensor :: (Num e, Shape sh) => Tensor D sh e
 zeroDTensor = repeatTensor 0
 
+{-# INLINE oneDTensor #-}
 oneDTensor :: (Num e, Shape sh) => Tensor D sh e
 oneDTensor = repeatTensor 1

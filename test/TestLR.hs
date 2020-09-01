@@ -54,8 +54,9 @@ loss ::
   mo e
 loss wb x' y =
   let z = x' |*| (cv wb)
-      repeat1 = (repeatTensor 1) :: RVector D n e
-   in repeat1 |⋅| (((cv y) |⊙| z) |+| (mapTensor (\z' -> log ((exp z')) + 1) z))
+      repeat1 = return ((repeatTensor 1) :: RVector D n e)
+      right = return $ ((cv y) |⊙| z) |+| (mapTensor (\z' -> log ((exp z')) + 1) z)
+   in repeat1 |⋅| right
 
 -- Gradient Descent
 gradient ::

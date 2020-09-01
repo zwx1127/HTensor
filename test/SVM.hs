@@ -335,8 +335,8 @@ trainY' = fromList $ (take 8 (repeat 1.0)) <> (take 9 (repeat (-1.0)))
 
 testSVM :: IO ()
 testSVM = do
-  let alpha = 40
-  let c = 100
+  let alpha = 5
+  let c = 20
   SMOST{a=aN, b=bN} <- smo 100000 trainX' trainY' (rbf alpha) c
   print aN
   print bN

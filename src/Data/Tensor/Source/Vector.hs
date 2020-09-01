@@ -73,8 +73,10 @@ instance Target V e where
   {-# INLINE seqMVec #-}
   seqMVec vec x = vec `seq` x
 
+{-# INLINE zeroVTensor #-}
 zeroVTensor :: (Num e, Shape sh) => Tensor V sh e
 zeroVTensor = repeatTensor 0
 
+{-# INLINE oneVTensor #-}
 oneVTensor :: (Num e, Shape sh) => Tensor V sh e
 oneVTensor = repeatTensor 1

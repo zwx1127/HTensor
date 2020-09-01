@@ -73,8 +73,10 @@ instance (U.Unbox e) => Target U e where
   {-# INLINE seqMVec #-}
   seqMVec vec x = vec `seq` x
 
+{-# INLINE zeroUTensor #-}
 zeroUTensor :: (U.Unbox e, Num e, Shape sh) => Tensor U sh e
 zeroUTensor = repeatTensor 0
 
+{-# INLINE oneUTensor #-}
 oneUTensor :: (U.Unbox e, Num e, Shape sh) => Tensor U sh e
 oneUTensor = repeatTensor 1

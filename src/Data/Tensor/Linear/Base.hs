@@ -22,14 +22,18 @@ type RVector r m e = Matrix r 1 m e
 
 type CVector r m e = Matrix r m 1 e
 
+{-# INLINE rv #-}
 rv :: (Source r e, KnownNat m, Num e) => Vector r m e -> RVector r m e
 rv = reshape
 
+{-# INLINE cv #-}
 cv :: (Source r e, KnownNat m, Num e) => Vector r m e -> CVector r m e
 cv = reshape
 
+{-# INLINE rv2cv #-}
 rv2cv :: (Source r e, KnownNat m, Num e) => RVector r m e -> CVector r m e
 rv2cv = reshape
 
+{-# INLINE cv2rv #-}
 cv2rv :: (Source r e, KnownNat m, Num e) => CVector r m e -> RVector r m e
 cv2rv = reshape

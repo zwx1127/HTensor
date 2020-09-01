@@ -17,6 +17,7 @@ t = fromList [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 testEF :: IO ()
 testEF = do
   -- let t' = computeS (_row t 1) :: Vector V 4 Int
-  t' <- transpose t
-  t'' <- t |*| t'
-  print t''
+  let tt = return t
+  let tt' = transpose $ tt
+  tt'' <- tt |*| tt'
+  print tt''
