@@ -10,6 +10,10 @@ build-type:          Simple
 cabal-version:       >=1.10
 extra-source-files:  README.md
 
+source-repository head
+   type:     git
+   location: https://github.com/zwx1127/HTensor.git
+
 library
   hs-source-dirs:
       src

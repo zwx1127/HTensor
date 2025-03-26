@@ -9,6 +9,8 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant bracket" #-}
 
 module Neural where
 
@@ -191,7 +193,6 @@ train ::
 train rate x y l = do
   (neural, _) <- step rate (x, x) y l
   return neural
-  where
 
 step ::
   forall r1 r2 r3 a m n p mo.
